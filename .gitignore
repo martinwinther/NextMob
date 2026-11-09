@@ -1,0 +1,8 @@
+# macOS
+.DS_Store
+
+# BigWigs packager build output
+.release/
+
+# local scratch
+*.zip

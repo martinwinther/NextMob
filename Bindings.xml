@@ -1,0 +1,5 @@
+<Bindings>
+  <Binding name="NEXTMOB_TARGET" header="NEXTMOB">
+    NextMobButton:Click()
+  </Binding>
+</Bindings>

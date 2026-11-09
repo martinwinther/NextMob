@@ -1,0 +1,26 @@
+## Interface: 16001, 120105, 50500, 11509
+## Title: NextMob
+## Notes: One button that targets whatever your current quests want you to kill. Kill objectives and item drops, with exact quest NPCs via QuestieDB.
+## Author: martin
+## Version: 1.0
+## SavedVariables: NextMobDB, QuestTargetDB
+## IconTexture: Interface\ICONS\Ability_Hunter_SniperShot
+## DefaultState: enabled
+## X-Category: Quests & Leveling
+## OptionalDeps: QuestieDB
+# The packager reads this to know which CurseForge project to upload to. It
+# comes from the project's own page, in the About Project box. Until it is
+# filled in the packager builds the zip and the GitHub release, and skips the
+# CurseForge upload.
+# ## X-Curse-Project-ID:
+## X-Website: https://github.com/martinwinther/NextMob
+## X-License: MIT
+
+# QuestTargetDB above is the database under the addon's former name; Core.lua
+# adopts it on load. It can be dropped a couple of versions from now.
+
+Locale.lua
+Core.lua
+QuestieDB.lua
+Button.lua
+Bindings.xml

@@ -1,0 +1,75 @@
+# Checks on work in progress. This never uploads anything anywhere: the only
+# workflow that publishes is release.yml, and that one fires on tags alone.
+
+name: Checks
+
+on:
+  push:
+    branches:
+      - dev
+      - 'dev/**'
+      - 'feature/**'
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read   # reads the code, publishes nothing
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    name: Test suites
+    steps:
+      - name: Check out
+        uses: actions/checkout@v7
+
+      - name: Install Lua
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq lua5.4
+
+      # Seven suites, each stubbing a different client shape: one that allows
+      # the combat log, one shaped like Forever (combat log forbidden, Secret
+      # values from unit APIs), drop quests, the QuestieDB adapter including it
+      # being absent or throwing, creature-id matching, finished objectives,
+      # and corpse guards.
+      - name: Run the test suites
+        run: lua5.4 tools/run-tests.lua .
+
+  syntax:
+    runs-on: ubuntu-latest
+    name: Lua syntax
+    steps:
+      - name: Check out
+        uses: actions/checkout@v7
+
+      - name: Install Lua
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq lua5.4
+
+      # The game loads these files; a syntax error is a dead addon, so this is
+      # checked separately from the suites in case a suite stops running.
+      - name: Compile every addon file
+        run: luac5.4 -p Core.lua QuestieDB.lua Button.lua Locale.lua tools/run-tests.lua
+
+  toc:
+    runs-on: ubuntu-latest
+    name: TOC lists every file
+    steps:
+      - name: Check out
+        uses: actions/checkout@v7
+
+      # A .lua file added to the repo but never added to the .toc simply does
+      # not load in game, which is easy to miss and hard to debug.
+      - name: Every addon Lua file appears in the TOC
+        run: |
+          status=0
+          for f in *.lua; do
+            if ! grep -qx "$f" NextMob.toc; then
+              echo "::error file=NextMob.toc::$f is not listed in NextMob.toc"
+              status=1
+            fi
+          done
+          exit $status

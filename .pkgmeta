@@ -1,0 +1,23 @@
+# BigWigs packager configuration.
+# Reference: https://github.com/BigWigsMods/packager
+#
+# The addon's .toc sits at the repository root, which is what the packager
+# expects. Everything that is tooling rather than addon gets ignored below.
+
+package-as: NextMob
+
+manual-changelog:
+    filename: CHANGELOG.md
+    markup-type: markdown
+
+ignore:
+    - tools
+    - README.md
+    - PUBLISHING.md
+    - curseforge-description.md
+
+# The packager always ignores anything beginning with a period, so .pkgmeta,
+# .github and .gitignore need no entry here.
+#
+# No externals: this addon embeds no libraries. QuestieDB is an optional
+# dependency read at runtime, never bundled.
