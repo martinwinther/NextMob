@@ -22,9 +22,20 @@
    | `WOWI_API_TOKEN` | WoWInterface, if you also publish there | no |
 
    `GITHUB_TOKEN` is provided by Actions; nothing to add.
-4. **Upload the description.** CurseForge descriptions are not set by the
-   packager — paste `curseforge-description.md` into the project page yourself.
-   Tick the **Forever** game flavour; it is far less crowded than Retail.
+4. **Upload the description and the icon.** Neither is set by the packager.
+   Paste `curseforge-description.md` into the project page, and upload
+   `media/icon-400.png` as the project avatar (CurseForge wants a square image,
+   400x400 or larger). Tick the **Forever** game flavour; it is far less
+   crowded than Retail.
+
+   The icon is generated, not hand-drawn, so it can be re-rendered at any size:
+
+   ```
+   python3 -I tools/make-icon.py media/icon-400.png 400
+   ```
+
+   Edit `tools/make-icon.py` to change it — colours are named constants at the
+   top, and the geometry is in 400px units scaled by `s`.
 
 ## Cutting a release
 

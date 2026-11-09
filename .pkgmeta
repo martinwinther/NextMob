@@ -12,6 +12,7 @@ manual-changelog:
 
 ignore:
     - tools
+    - media
     - README.md
     - PUBLISHING.md
     - curseforge-description.md

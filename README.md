@@ -1,3 +1,5 @@
+<img src="media/icon-400.png" alt="" width="96" align="right">
+
 # NextMob
 
 One button that targets whatever your active quests want you to kill — the Zygor
