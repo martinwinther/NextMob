@@ -123,8 +123,27 @@ def render(size):
             r, g, b = mix(BG_INNER, BG_OUTER, t * t)
             alpha = a_bg
 
-            def over(col, cov, r=None, g=None, b=None):
-                return cov
+            # claw slashes, drawn first so the reticle sits over them
+            for (ax, ay, bx, by, width) in claws:
+                d = sd_blade(cx, cy, ax, ay, bx, by, width)
+                a_c = clamp(0.5 - d)
+                # A dark outline around every slash, drawn whether or not the
+                # slash covers this pixel. With the slashes behind the reticle
+                # this is what keeps them from melting into the dark plate.
+                lip = clamp(0.5 - (d - 5.0 * s))
+                if lip > a_c:
+                    k = lip - a_c
+                    r = lerp(r, 0x0E, k)
+                    g = lerp(g, 0x12, k)
+                    b = lerp(b, 0x18, k)
+                    alpha = alpha + (1 - alpha) * k
+                if a_c > 0:
+                    shade = clamp(0.5 + (cx + cy) / (300 * s))
+                    col = mix(CLAW, CLAW_DIM, shade)
+                    r = lerp(r, col[0], a_c)
+                    g = lerp(g, col[1], a_c)
+                    b = lerp(b, col[2], a_c)
+                    alpha = alpha + (1 - alpha) * a_c
 
             # reticle ring, lit from the top left
             d_ring = sd_ring(cx, cy, ring_r, ring_t)
@@ -146,28 +165,6 @@ def render(size):
                     g = lerp(g, GOLD[1], a_t)
                     b = lerp(b, GOLD[2], a_t)
                     alpha = alpha + (1 - alpha) * a_t
-
-            # claw slashes, drawn last so they sit over the reticle
-            for (ax, ay, bx, by, width) in claws:
-                d = sd_blade(cx, cy, ax, ay, bx, by, width)
-                a_c = clamp(0.5 - d)
-                # A dark outline around every slash, drawn whether or not the
-                # slash covers this pixel, so the red stays separated from the
-                # gold ring it crosses.
-                lip = clamp(0.5 - (d - 5.0 * s))
-                if lip > a_c:
-                    k = lip - a_c
-                    r = lerp(r, 0x0E, k)
-                    g = lerp(g, 0x12, k)
-                    b = lerp(b, 0x18, k)
-                    alpha = alpha + (1 - alpha) * k
-                if a_c > 0:
-                    shade = clamp(0.5 + (cx + cy) / (300 * s))
-                    col = mix(CLAW, CLAW_DIM, shade)
-                    r = lerp(r, col[0], a_c)
-                    g = lerp(g, col[1], a_c)
-                    b = lerp(b, col[2], a_c)
-                    alpha = alpha + (1 - alpha) * a_c
 
             px_bytes += bytes((
                 int(clamp(r, 0, 255) + 0.5),
